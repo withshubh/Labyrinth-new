@@ -127,7 +127,7 @@
         scene.remove(aboxes[i]);
       }
 
-      // Print gound
+      // Print ground
       var plane_ground = document.createElement("a-plane");
       plane_ground.setAttribute('static-body','');
       plane_ground.setAttribute('height',3*maze_height);

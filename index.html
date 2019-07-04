@@ -15,9 +15,11 @@
   </head>
 
   <body>
+    <!--Anchored VR Design-->
     <!--Aframe scene starts here-->
     <a-scene fog="type: linear; color: #AAB; near: 0; far:10;" physics id="scene" >
       <!--Importing Assets-->
+      <!--Diegetic UI Elements-->
       <a-assets>
         <img src="assets/door.png" id="door">
         <img src="assets/wall.jpg" id="asset_wall">
@@ -40,12 +42,14 @@
                 kinematic-body 
                 universal-controls>
                 <!--Entity to create a crosshair-->
+                <!--Crosshair is a Non-Diegetic UI Element-->
                 <a-entity cursor="fuse: true; fuseTimeout: 500"
                   position="0 0 -1"
                   geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
                   material="color:#20639B; shader: flat">
                 </a-entity>
                 <!--Entity for Timer-->
+                <!--Timer is a Non-Diegetic UI Element-->
                   <a-entity text="text: Time;fnt:assets/SourceCodePro.fnt;size:.09;height:0.001" material="color:#ff3232" position="-0.1 -0.7 -1" id="board"></a-entity>
                   <!--Entity for Winner text-->
                   <a-entity text="text: ;size:0.1;height:0.001" material="color:#f4ff61" position="-0.3 0 -1" id="winner"></a-entity>
@@ -56,7 +60,7 @@
     <!--JavaScript Starts here-->
     
     <script>
-// On-click component created for reload game
+//  Reload Game Component
 AFRAME.registerComponent('on-click', {
 init: function () {
 this.el.addEventListener('click', function (evt) {
@@ -70,7 +74,7 @@ this.el.addEventListener('click', function (evt) {
     
     var maze;
 
-    // Player body collision with the Door & Win Text display
+    // Player body collision with the Door & Winner Text display
     var cam = document.getElementById('camera');
     cam.addEventListener('collide', function (e) {
       if(e.detail.body.el.getAttribute('id')=='price'){
@@ -117,6 +121,7 @@ this.el.addEventListener('click', function (evt) {
     }
 
     // Maze Width & Height
+    
     var width = QueryString.width;
     var height = QueryString.height;
     if(typeof width == 'undefined'){
