@@ -1,5 +1,5 @@
 
-    /* Aux functions */
+    /* Aux functions- Maze sharing */
 
     Array.prototype.repeat= function(what, L){
      while(L) this[--L]= what;
@@ -40,6 +40,8 @@
       return str.replace()
     }
 
+    /* Shuffle */
+
     function shuffle(a) {
       var j, x, i;
       for (i = a.length; i; i--) {
@@ -51,6 +53,7 @@
     }
 
     /* Maze functions */
+    /* Replication Single objects for maze */
 
     function buildPath(maze, pos){
       var neighbor = [];

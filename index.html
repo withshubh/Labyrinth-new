@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Labyrinth game — A-Frame</title>
-    <meta name="description" content="Labyrinth — A-Frame">
+    <title>MazeGame</title>
+    <meta name="description" content="MazeGame - Fun Trivia Maze Game built on A-frame & Three.js">
     <!--Libraries & external scripts Import-->
-    <script src="libs/aframe.js"></script>
-    <script src="libs/aframe-extras.js"></script>
-    <script src="libs/aframe-text-component.min.js"></script>
-    <script src="libs/lz-string.min.js"></script>
-    
-    <script src="src/common.js"></script>
+    <script src="libs/aframe.js"></script>    <!--Aframe.js(v0.3.0) Library-->
+    <script src="libs/aframe-extras.js"></script>    <!--Aframe-extras.js(v2.6.1) Library-->
+    <script src="libs/aframe-text-component.min.js"></script>   <!--Aframe library used for rendering text-->
+    <script src="libs/lz-string.min.js"></script>   <!--LZ-based compression algorithm for JavaScript-->
+    <script src="libs/aframe-bmfont-text-component.js"></script>    <!--Aframe library used for rendering bitmap font text-->
+    <script src="src/common.js"></script>    <!--JavaScript for the game-->
 
   </head>
 
@@ -27,11 +27,11 @@
         <img src="assets/reload.png" id="asset_reload">
       </a-assets>
       <!--Entity to add background noise-->
-      <a-entity sound="src: url(assets/backgroundnoise.mp3); autoplay: true; loop:true; distanceModel:linear">
+      <a-entity sound="src: url(assets/audio/backgroundnoise.mp3); autoplay: true; loop:true; distanceModel:linear">
       </a-entity>
       <!--Camera/Player body Entity-->
       <a-entity static-body
-                sound="src: url(src/bat.mp3); on: collide; volume:0.1;"
+                sound="src: url(assets/audio/bat.mp3); on: collide; volume:0.05;"  
                 velocity="0 0 0" 
                 rotation="0 0 0" 
                 position="0 1.6 -2" 
@@ -39,16 +39,16 @@
                 camera="" 
                 kinematic-body 
                 universal-controls>
-                <!--Entity to create a round crosshair at the center of the scene-->
+                <!--Entity to create a crosshair-->
                 <a-entity cursor="fuse: true; fuseTimeout: 500"
                   position="0 0 -1"
                   geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                  material="color:green; shader: flat">
+                  material="color:#20639B; shader: flat">
                 </a-entity>
                 <!--Entity for Timer-->
-                  <a-entity text="text: Time;size:.04;height:0.001" material="color:#f00" position="-0.1 -0.7 -1" id="board"></a-entity>
+                  <a-entity text="text: Time;fnt:assets/SourceCodePro.fnt;size:.09;height:0.001" material="color:#ff3232" position="-0.1 -0.7 -1" id="board"></a-entity>
                   <!--Entity for Winner text-->
-                  <a-entity text="text: ;size:.3;height:0.001" material="color:#78ff0f" position="-0.3 0 -1" id="winner"></a-entity>
+                  <a-entity text="text: ;size:0.1;height:0.001" material="color:#f4ff61" position="-0.3 0 -1" id="winner"></a-entity>
                 </a-entity>               
     </a-scene>
     <!--Aframe scene ends here-->
@@ -56,7 +56,7 @@
     <!--JavaScript Starts here-->
     
     <script>
-// On-click component created to reload page
+// On-click component created for reload game
 AFRAME.registerComponent('on-click', {
 init: function () {
 this.el.addEventListener('click', function (evt) {
@@ -65,10 +65,12 @@ this.el.addEventListener('click', function (evt) {
 }
 });
 
-                  // Maze formation
+
+    /* Maze formation */
+    
     var maze;
 
-    // Player body collision with the portal/door & winner display
+    // Player body collision with the Door & Win Text display
     var cam = document.getElementById('camera');
     cam.addEventListener('collide', function (e) {
       if(e.detail.body.el.getAttribute('id')=='price'){
@@ -76,7 +78,7 @@ this.el.addEventListener('click', function (evt) {
 
         var winner = document.getElementById('winner');
         var attr_text = winner.getAttribute('text');
-        attr_text.text = "You win!!";
+        attr_text.text = "Hurray! You Win!";
         winner.setAttribute('text', attr_text);
       }
     });
@@ -93,7 +95,7 @@ this.el.addEventListener('click', function (evt) {
         maze[i] = [].repeat(0, width);
       }
 
-      // Random maze generation 
+      // Randomized path generation 
       buildPath(maze,[0,0]);
       if(typeof QueryString.maze == 'undefined'){
         window.location.hash += '&maze='+LZString.compressToBase64(JSON.stringify(maze));
@@ -101,15 +103,20 @@ this.el.addEventListener('click', function (evt) {
         maze = JSON.parse(LZString.decompressFromBase64(QueryString.maze))
       }
       paintMaze(maze);
+
+      // Timer Function
+
       seconds = 0;
       counter = setInterval(function(){
         var board = document.getElementById('board');
         var attr_text = board.getAttribute('text');
         attr_text.text = seconds++;
-        board.setAttribute('text', attr_text);
+        var sec = attr_text;
+        board.setAttribute('text',attr_text);
       },1000);
     }
 
+    // Maze Width & Height
     var width = QueryString.width;
     var height = QueryString.height;
     if(typeof width == 'undefined'){
