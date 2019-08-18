@@ -150,6 +150,7 @@ All other components are working fine as of today.
 
 # Code Quality Report
 
+![Quality test](README_Content/lb.png)
 
 # Credits 
 
